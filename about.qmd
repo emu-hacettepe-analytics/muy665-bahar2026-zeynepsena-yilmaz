@@ -7,34 +7,44 @@ sidebar: false
 
 # Eğitim
 
--   B.S., ................................., ....................................University, Turkey, 20xx - 20xx.
--   M.S., Industrial Engineering, Hacettepe University, Turkey, 20xx - ongoing.
--   Ph.D.., Industrial Engineering, Hacettepe University, Turkey, 20xx - ongoing.
+-   B.S., Metallurgical and Materials Engineering, Atılım University, Turkey, 2015 - 2020.
+-   B.S., Industrial Engineering, Atılım University, Turkey, 2017 - 2021.
+-   M.S., Industrial Engineering, Hacettepe University, Turkey, 2026 - ongoing.
 
 # İş Tecrübesi
 
 ## Employements
 
-1.  Firm xxx, position xx, year xxx
-
-2.  Firm yyy, position yyy, year yyy
+1.  Tusaş, Tedarik Zinciri Yönetimi, 2021-ongoing
 
 ## Internships
 
-1.  Firm aaa, position xx, year xxx
+1.  ORS, Kalite Kontrol Stajyeri, 2018
 
-2.  Firm bbb, position yyy, year yyy
+2.  Erdemir, Sıcak Haddekane Kalite Güvence Stajyeri, 2019
 
-# Projects
-
-1.  TUBİTAK 1001..........................
-
-# Publications
-
-1.  Dasdemir, E., Batta, R., Koksalan, M., Tezcaner Ozturk, D. (2022) “UAV Routing for Reconnaissance Mission: A Multi-Objective Orienteering Problem with Time-Dependent Prizes and Multiple Connections”, Computers & Operations Research, 145: 105882.
+3.  TSE, Kalite, 2020
 
 # Competencies
 
-R, Quarto, Git, Python
+-   Data Analysis (R, SQL)
+
+-   Reporting & Documentation (Quarto)
+
+-   Version Control (Git)
+
+<!-- -->
+
+-   Advanced Excel (Power Pivot, Power Query)
+
+-   Dashboard & Data Visualization (Power BI)
+
+-   Supply Chain & Procurement Analytics
 
 # Hobbies
+
+-   Reading (history, food culture, sustainability)
+
+-   Traveling & cultural exploration
+
+-   Cooking & food culture

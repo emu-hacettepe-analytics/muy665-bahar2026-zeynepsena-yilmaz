@@ -5,4 +5,4 @@ sidebar: false
 
 MUY660-İş Analitiği dersi sayfama hoş geldiniz.
 
-Bu analitik çalışmalarımızı paylaşıyorum.
+Bu sayfada veriyle yaptığımız keşifleri, analitik çalışmalarımızı ve küçük içgörü yolculuklarımızı paylaşıyorum.
