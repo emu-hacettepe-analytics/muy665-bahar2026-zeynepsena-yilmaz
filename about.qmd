@@ -3,8 +3,6 @@ title: "Hakkımda"
 sidebar: false 
 ---
 
-![](assets/images/vesikalik.jpeg){fig-align="center"}
-
 # Eğitim
 
 -   B.S., Metallurgical and Materials Engineering, Atılım University, Turkey, 2015 - 2020.

@@ -1,8 +1,6 @@
 ---
-title: "Analitik sayfama hoş geldiniz"
+title: "Işıltılı Analitik Sayfasına Hoşgeldiniz"
 sidebar: false 
 ---
 
-MUY660-İş Analitiği dersi sayfama hoş geldiniz.
-
-Bu sayfada veriyle yaptığımız keşifleri, analitik çalışmalarımızı ve küçük içgörü yolculuklarımızı paylaşıyorum.
+MUY660-İş Analitiği dersi sayfamda veriyle yaptığımız keşifleri, analitik çalışmalarımızı ve küçük içgörü yolculuklarımızı paylaşıyorum.

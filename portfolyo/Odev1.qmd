@@ -2,7 +2,7 @@
 title: "Ödev 1 - Zeynep Sena Yılmaz"
 ---
 
-Bu çalışmada 4 görevimiz var. Bu görevler kapsamında GitHub üzerinde web sitesi oluşturma, veri manipülasyonu ve eksik veri analizi süreçlerini deneyimliyoruz.
+Bu calışmada 4 görevimiz var. Bu görevler kapsamında GitHub üzerinde web sitesi oluşturma, veri manipülasyonu ve eksik veri analizi süreçlerini deneyimliyoruz.
 
 ## 1) Github ile Web Sitesi Oluşturma
 
@@ -14,7 +14,8 @@ Hazırladığım web sitesine [buradan](https://emu-hacettepe-analytics.github.i
 
 ## 3) Video Analizi
 
-"Veri Bilimi ve Endüstri Mühendisliği Üzerine Sohbetler" videosundan edindiğim temel çıkarım: *(Buraya kendi cümlelerinle 1-2 cümle eklemeyi unutma!)*
+"Veri Bilimi ve Endüstri Mühendisliği Üzerine Sohbetler" videosundan edindiğim temel çıkarım: 
+
 
 ## 4) MÜY665 Ödev-1: Veri Analizi ve Temizleme
 
