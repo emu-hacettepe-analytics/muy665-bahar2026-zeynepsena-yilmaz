@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "[xxxx]'in Analitik Labı"
+  title: "Sena'nın Işıltılı Analitik Labı"
   navbar:
     search: true
     left:
@@ -22,11 +22,11 @@ website:
             
     tools:
       - icon: github
-        href: https://twitter.com
+        href: https://github.com/emu-hacettepe-analytics/muy665-bahar2026-zeynepsena-yilmaz
       - icon: twitter
-        href: https://twitter.com
+        href: https://y.yarn.co/ad0f6b7d-84a9-4b77-b97b-65599a89eddb_text.gif
       - icon: linkedin
-        href: https://linkedin.com
+        href: https://www.linkedin.com/in/senaincecam
 
   sidebar:
     - title: "Çalışmalar"
