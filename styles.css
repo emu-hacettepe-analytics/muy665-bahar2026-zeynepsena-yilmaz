@@ -40,6 +40,7 @@ hr {
 body {
   background-image: 
     radial-gradient(circle at 10% 20%, rgba(106, 17, 203, 0.03) 0%, transparent 20%),
+    
     radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.03) 0%, transparent 20%);
   background-attachment: fixed;
 }

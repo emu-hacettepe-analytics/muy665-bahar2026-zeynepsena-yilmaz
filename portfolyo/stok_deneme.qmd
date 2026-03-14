@@ -1,0 +1,220 @@
+title: "Üretim Malzemeleri Stok Yönetim Panosu"
+author: "Stratejik Planlama"
+format:
+dashboard:
+theme: [dark, slate]
+execute:
+echo: false
+warning: false
+
+#| label: setup
+#| message: false
+library(tidyverse)
+library(scales)
+
+# Verilerin Hazırlanması (Görsellerdeki kesin rakamlar)
+gmy_genel <- data.frame(
+  Birim = c("Havacılık Yapısalları", "MMU", "Uçak", "Helikopter", "İHA Sistemleri", "Uzay Sistemleri"),
+  Tutar = c(184.47, 158.88, 157.34, 123.07, 35.98, 9.72)
+)
+
+tip_genel <- data.frame(
+  Tip = c("STANDART PART", "RAW MATERIAL", "EQUIPMENT", "CHEMICAL"),
+  Tutar = c(394.04, 185.35, 53.58, 36.48)
+)
+
+# Detay Analiz Verileri ($90.5M)
+detay_data <- data.frame(
+  Birim = c("Uçak", "Helikopter", "MMU", "Havacılık Yapısalları", "İHA Sistemleri"),
+  Toplam = c(31.49, 22.39, 20.31, 8.69, 7.09),
+  Gerekli = c(16.11, 14.04, 19.69, 6.12, 1.38),
+  Optimizasyon = c(15.38, 8.35, 0.62, 2.57, 5.71)
+)
+
+detay_tip <- data.frame(
+  Tip = c("STANDART PART", "RAW MATERIAL", "EQUIPMENT", "CHEMICAL"),
+  Tutar = c(23.53, 6.76, 2.06, 0.50)
+)
+
+
+Genel Stok ($669M)
+
+Row {height=20%}
+
+#| content: valuebox
+#| title: "Global Stok Toplamı"
+list(
+  icon = "bank",
+  color = "primary",
+  value = "$669.5M"
+)
+
+
+#| content: valuebox
+#| title: "Aktif Kullanım (2024-2026)"
+list(
+  icon = "activity",
+  color = "success",
+  value = "$549.4M"
+)
+
+
+#| content: valuebox
+#| title: "Sınırlı Hareket (2023 Öncesi)"
+list(
+  icon = "hourglass-split",
+  color = "warning",
+  value = "$66.8M"
+)
+
+
+#| content: valuebox
+#| title: "Hareketsiz Stok"
+list(
+  icon = "snow",
+  color = "danger",
+  value = "$53.3M"
+)
+
+
+Row {height=40%}
+
+Birim Bazlı Global Dağılım (GMY)
+
+#| title: "Birim Bazlı Stok Dağılımı (Milyon $)"
+ggplot(gmy_genel, aes(x = reorder(Birim, -Tutar), y = Tutar, fill = Birim)) +
+  geom_col(show.legend = FALSE, width = 0.6, fill = "#3b82f6") +
+  geom_text(aes(label = paste0("$", Tutar, "M")), vjust = -0.5, size = 3, color = "white") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL) +
+  theme(
+    panel.grid.major = element_line(color = "gray20"),
+    panel.grid.minor = element_blank(),
+    text = element_text(color = "white"),
+    axis.text.x = element_text(angle = 15, hjust = 1)
+  )
+
+
+Stok Kategorileri (Malzeme Tipi)
+
+#| title: "Malzeme Tipi Bazlı Dağılım (Milyon $)"
+ggplot(tip_genel, aes(x = reorder(Tip, -Tutar), y = Tutar)) +
+  geom_col(width = 0.5, fill = "#10b981") +
+  geom_text(aes(label = paste0("$", Tutar, "M")), vjust = -0.5, size = 3, color = "white") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL) +
+  theme(
+    panel.grid.major = element_line(color = "gray20"),
+    panel.grid.minor = element_blank(),
+    text = element_text(color = "white")
+  )
+
+
+Row {height=40%}
+
+Stok Hareket Karakteristiği
+
+Genel stok yapısının büyük bir bölümü aktif operasyonel süreçlerde yer almaktadır. 2023 öncesi bakiyeler ve hareketsiz kalemler için optimizasyon süreçleri planlanmaktadır.
+
+Stok Durumu
+
+Tutar
+
+Pay (%)
+
+Hareketli (2024+)
+
+$549.4M
+
+82.1%
+
+İnceleme (2023-)
+
+$66.8M
+
+10.0%
+
+Hareket Yok
+
+$53.3M
+
+7.9%
+
+Detay Analiz ($90M)
+
+Row {height=20%}
+
+#| content: valuebox
+#| title: "Analiz Havuzu"
+list(
+  icon = "search",
+  color = "info",
+  value = "$90.56M"
+)
+
+
+#| content: valuebox
+#| title: "Gerekli (İhtiyaç)"
+list(
+  icon = "check2-all",
+  color = "success",
+  value = "$57.71M"
+)
+
+
+#| content: valuebox
+#| title: "Alternatif Değerlendirme (Atıl)"
+list(
+  icon = "recycle",
+  color = "primary",
+  value = "$32.85M"
+)
+
+
+Row {height=45%}
+
+Birim Bazlı Karar Dağılımı
+
+#| title: "Birim Bazlı Gerekli vs Atıl Kararı ($M)"
+detay_long <- detay_data %>%
+  pivot_longer(cols = c(Gerekli, Optimizasyon), names_to = "Karar", values_to = "Deger")
+
+ggplot(detay_long, aes(x = Birim, y = Deger, fill = Karar)) +
+  geom_col(position = "dodge", width = 0.7) +
+  scale_fill_manual(values = c("Gerekli" = "#10b981", "Optimizasyon" = "#3b82f6")) +
+  theme_minimal() +
+  labs(x = NULL, y = NULL) +
+  theme(
+    legend.position = "bottom",
+    text = element_text(color = "white"),
+    panel.grid.major = element_line(color = "gray20"),
+    axis.text.x = element_text(angle = 15, hjust = 1)
+  )
+
+
+Malzeme Tipi Detayı ($32.8M Atıl)
+
+#| title: "Atıl Olarak Sınıflandırılan Malzeme Tipleri ($M)"
+ggplot(detay_tip, aes(x = reorder(Tip, -Tutar), y = Tutar)) +
+  geom_col(width = 0.5, fill = "#ef4444") +
+  geom_text(aes(label = paste0("$", Tutar, "M")), vjust = -0.5, size = 3, color = "white") +
+  theme_minimal() +
+  labs(x = NULL, y = NULL) +
+  theme(
+    panel.grid.major = element_line(color = "gray20"),
+    text = element_text(color = "white")
+  )
+
+
+Row {height=35%}
+
+Detaylı Karar Matrisi
+
+knitr::kable(detay_data)
+
+
+Stratejik Özet
+
+90.5M USD değerindeki bu alt kümede, düşük devir hızına rağmen $57.7M değerindeki üretim malzemesi, gelecek dönem üretim hedefleri doğrultusunda "İhtiyaç" olarak korunmuştur.
+
+Kalan $32.8M tutarındaki bakiye (Atıl) için optimizasyon çalışmaları yürütülmektedir.
