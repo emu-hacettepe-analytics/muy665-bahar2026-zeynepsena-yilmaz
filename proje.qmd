@@ -1,56 +1,1096 @@
----
-title: "Proje X (proje adını yazınız)"
+## title: "Ankara'da Su Kullanımı ve Baraj Doluluk Oranı Tahmini"
+author: "Parlayan Yıldızlar Takımı"
+date: "22.05.2026"
 number-sections: true
----
+format:
+html:
+theme: cosmo
+toc: true
+toc-title: "İçindekiler"
+code-fold: true
+code-summary: "Kodu Göster / Gizle"
+code-tools: true
+execute:
+warning: false
+message: false
 
-**Projemizle ilgili güncellemelerden haberdar olmak için bu xxxxx bağlantısındaki proje sayfamızı takip edin.**
+**Projemizle ilgili güncellemelerden haberdar olmak için proje sayfamızı takip edebilirsiniz.**
 
-(Aşağıdaki başlıklar örnek olarak verilmiştir; lütfen gerektiği şekilde düzenlemekten çekinmeyin.)
+# 🎯 Proje Genel Bakış ve Kapsamı
 
-# Proje Genel Bakış ve Kapsamı
+Ankara'da su yönetimi, nüfus artışı, kentleşme, iklimsel dalgalanmalar ve barajlara bağımlı içme-kullanma suyu sistemi nedeniyle giderek daha kritik hale gelmektedir. Bu projenin amacı, Ankara'daki su kullanım verilerini, barajlara gelen su miktarını, yağış verilerini ve güncel baraj doluluk durumunu birlikte inceleyerek önümüzdeki aylar için kısa dönemli bir baraj doluluk oranı tahmini oluşturmaktır.
 
-xxxxxx
+Çalışmada cevap aranan temel sorular şunlardır:
 
-# Veri
+1.  Ankara barajlarına gelen su miktarı yıllara ve aylara göre nasıl değişmektedir?
 
-xxxxxx
+2.  Barajlara gelen su miktarında belirgin bir mevsimsellik var mıdır?
 
-## Veri Kaynağı
+3.  Yağış miktarı ile barajlara gelen su miktarı arasında nasıl bir ilişki vardır?
 
-xxxxxx
+4.  Ankara'da dağıtılan ve çekilen su miktarı yıllar içinde nasıl değişmiştir?
 
-## Veri Hakkında Genel Bilgiler
+5.  Güncel baraj su hacmi ve tahmini aylık net su dengesi kullanılarak önümüzdeki aylar için baraj doluluk oranı nasıl değişebilir?
 
-xxxxxx
+Bu çalışma kesin bir hidrolojik tahmin modeli değil, açık veri kaynaklarına dayanan keşifsel ve karar destek amaçlı kısa dönemli bir su dengesi analizidir.
 
-## Tercih Sebebi
+# 📊 Veri
 
-xxxxxx
+Bu çalışmada aşağıdaki veri bileşenleri kullanılmıştır:
 
-## Ön İşleme
+1.  **Aylık barajlara gelen su miktarı:** Ankara barajlarına yıllara ve aylara göre gelen su hacmini gösterir.
 
-xxxxxx
+2.  **Ankara yağış verileri:** Günlük veya saatlik yağış miktarını milimetre cinsinden gösterir.
 
-# Analiz
+3.  **Dağıtılan, çekilen ve kişi başı çekilen su miktarı:** Ankara'da su kullanımının yıllar içindeki eğilimini gösterir.
 
-xxxxxx
+4.  **Güncel baraj doluluk verisi:** ASKİ baraj sayfasından çekilen baraj bazlı toplam hacim, mevcut su miktarı ve doluluk oranı bilgisidir.
 
-## Keşifsel Veri Analizi
+5.  **Arıtılan içme ve kullanma suyu miktarı:** 2023-2024 gerçekleşme, 2025-2026 performans programı/hedef değeri olarak kullanılmıştır.
 
-xxxxxx
+## 🌐 Veri Kaynağı
 
-## Trend Analizi
+Veriler ASKİ kaynaklarından, açık kamu verilerinden ve meteorolojik gözlem verilerinden derlenmiştir. Güncel baraj doluluk verisi ASKİ'nin baraj doluluk sayfasından R ortamında çekilmektedir:
 
-xxxxxx
+`https://www.aski.gov.tr/tr/baraj.aspx`
 
-## Model Uydurma
+Kullanılan yerel dosyalar `data/` klasöründe tutulmalıdır.
 
-xxxxxx
+Önerilen dosya yapısı:
 
-## Sonuçlar
+```         
+proje.qmd
+data/
+  Aylik_Baraj_Su_Miktari.xlsx
+  Ankara Yağış Verileri (2023-2026).xlsx
+  DAGITILAN CEKILEN VE KIS BASI CEKILEN.xls
+  ANKARA DAGITILAN SU MIKTARI.xls
+  sular nereden geliyor.xls
+```
 
-xxxxxx
+Dosya adları farklıysa kod içindeki aday dosya adlarına ekleme yapılabilir.
 
-# Sonuçlar ve Ana Çıkarımlar
+## ℹ️ Veri Hakkında Genel Bilgiler
 
-xxxxxx
+Barajlara gelen su, çekilen su, dağıtılan su ve mevcut baraj su hacmi metreküp cinsindedir. Yağış verisi ise milimetre cinsindedir. Bu nedenle yağış doğrudan hacim olarak değil, barajlara gelen suyu açıklamaya yardımcı iklimsel bir değişken olarak kullanılmıştır.
+
+Baraj doluluk tahmininde temel formül şu şekildedir:
+
+\$\$Tahmini\\ Mevcut\\ Su\_{t+1} = Güncel\\ Mevcut\\ Su_t + Net\\ Su\\ Dengesi_t\$\$\$\$Net\\ Su\\ Dengesi_t = Tahmini\\ Gelen\\ Su_t - Tahmini\\ Tüketim_t\$\$\$\$Tahmini\\ Doluluk\\ Oranı_t = \\frac{Tahmini\\ Mevcut\\ Su_t}{Toplam\\ Baraj\\ Kapasitesi} \\times 100\$\$
+
+## 💡 Tercih Sebebi
+
+Bu veri setleri Ankara'nın su yönetimini hem arz hem de talep tarafıyla inceleme olanağı sağlamaktadır. Barajlara gelen su miktarı arz tarafını, arıtılan ve dağıtılan su miktarı talep tarafını, yağış verisi ise iklimsel arka planı temsil etmektedir. Güncel baraj doluluk verisi ise net su dengesini doğrudan doluluk oranı tahminine dönüştürmek için kullanılmıştır.
+
+# ⚙️ Ön İşleme
+
+```         
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(scales)
+library(knitr)
+library(kableExtra)
+library(DT)
+library(broom)
+library(rvest)
+library(stringr)
+```
+
+## 🛠️ Yardımcı Fonksiyonlar
+
+```         
+# Akıllı Veri Okuma Motoru (Excel veya CSV'yi otomatik tespit eder ve okur)
+oku_veri <- function(adaylar, skip = 0, col_names = TRUE) {
+  # Dosya listesini oluştur
+  olasi_yollar <- unlist(map(adaylar, ~ c(file.path("data", .x), .x)))
+  
+  # Sistemdeki tüm dosyaları listele ve kısmi isim eşleştirmesi yap (CSV yedekleri için)
+  butun_dosyalar <- list.files(recursive = TRUE)
+  bulunan_dosya <- NA_character_
+  
+  for (aday in adaylar) {
+    base_clean <- str_to_lower(tools::file_path_sans_ext(aday))
+    eslesenler <- butun_dosyalar[str_detect(str_to_lower(butun_dosyalar), base_clean)]
+    if (length(eslesenler) > 0) {
+      bulunan_dosya <- eslesenler[1]
+      break
+    }
+  }
+  
+  # Kısmi eşleşme olmazsa tam yolları dene
+  if (is.na(bulunan_dosya)) {
+    mevcut_yollar <- olasi_yollar[file.exists(olasi_yollar)]
+    if (length(mevcut_yollar) > 0) {
+      bulunan_dosya <- mevcut_yollar[1]
+    }
+  }
+  
+  if (is.na(bulunan_dosya)) {
+    stop(paste0("Dosya bulunamadı. Aranan adaylar: ", paste(adaylar, collapse = ", ")))
+  }
+  
+  uzanti <- str_to_lower(tools::file_ext(bulunan_dosya))
+  
+  if (uzanti %in% c("xlsx", "xls")) {
+    return(read_excel(bulunan_dosya, skip = skip, col_names = col_names))
+  } else {
+    # CSV için ayıraç tespiti (virgül vs noktalı virgül)
+    veri <- tryCatch({
+      read_csv(bulunan_dosya, skip = skip, col_names = col_names, show_col_types = FALSE)
+    }, error = function(e) {
+      read_csv2(bulunan_dosya, skip = skip, col_names = col_names, show_col_types = FALSE)
+    })
+    return(veri)
+  }
+}
+
+oku_veri_opsiyonel <- function(adaylar, skip = 0, col_names = TRUE) {
+  tryCatch({
+    oku_veri(adaylar, skip = skip, col_names = col_names)
+  }, error = function(e) {
+    return(tibble())
+  })
+}
+
+hacim_sayi <- function(x) {
+  if (is.numeric(x)) {
+    return(as.numeric(x))
+  }
+  
+  x <- as.character(x)
+  x <- str_squish(x)
+  x <- str_replace_all(x, "\\s", "")
+  x <- str_replace_all(x, "\\.", "")
+  x <- str_replace_all(x, ",", ".")
+  as.numeric(x)
+}
+
+yuzde_sayi <- function(x) {
+  if (is.numeric(x)) {
+    return(as.numeric(x))
+  }
+  
+  x <- as.character(x)
+  x <- str_squish(x)
+  x <- str_replace_all(x, "%", "")
+  x <- str_replace_all(x, "\\s", "")
+  
+  has_comma <- str_detect(x, ",")
+  x_clean <- x
+  if (any(has_comma, na.rm = TRUE)) {
+    x_clean <- str_replace_all(x_clean, "\\.", "")
+    x_clean <- str_replace_all(x_clean, ",", ".")
+  }
+  as.numeric(x_clean)
+}
+
+ay_sirasi_buyuk <- c(
+  "OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN",
+  "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"
+)
+
+ay_sirasi <- c(
+  "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+  "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+)
+
+ay_tablosu <- tibble(
+  ay_no = 1:12,
+  ay = factor(ay_sirasi, levels = ay_sirasi, ordered = TRUE),
+  ay_buyuk = ay_sirasi_buyuk
+)
+```
+
+# 📥 Veri Okuma ve Düzenleme
+
+## 💧 Aylık Barajlara Gelen Su Miktarı
+
+```         
+baraj_raw <- oku_veri(
+  c(
+    "baraj_su.xlsx",
+    "Aylik_Baraj_Su_Miktari.xlsx",
+    "Aylık_Baraj_Su_Miktari.xlsx",
+    "Aylik Baraj Su Miktari.xlsx"
+  ),
+  skip = 1
+)
+
+names(baraj_raw) <- names(baraj_raw) |>
+  str_squish() |>
+  str_to_upper(locale = "tr")
+
+yil_col <- names(baraj_raw)[str_detect(names(baraj_raw), "YIL")][1]
+
+baraj_raw <- baraj_raw |>
+  rename(YILLAR = all_of(yil_col))
+
+eksik_aylar <- setdiff(ay_sirasi_buyuk, names(baraj_raw))
+
+if (length(eksik_aylar) > 0) {
+  stop(paste("Baraj dosyasında eksik ay sütunları var:", paste(eksik_aylar, collapse = ", ")))
+}
+
+baraj_long <- baraj_raw |>
+  mutate(YILLAR = as.integer(YILLAR)) |>
+  select(YILLAR, all_of(ay_sirasi_buyuk), any_of("TOPLAM")) |>
+  mutate(across(all_of(ay_sirasi_buyuk), hacim_sayi)) |>
+  pivot_longer(
+    cols = all_of(ay_sirasi_buyuk),
+    names_to = "ay_buyuk",
+    values_to = "gelen_su_m3"
+  ) |>
+  left_join(ay_tablosu, by = "ay_buyuk") |>
+  transmute(
+    yil = YILLAR,
+    ay_no,
+    ay,
+    tarih = as.Date(paste(yil, ay_no, "01", sep = "-")),
+    gelen_su_m3,
+    gelen_su_milyon_m3 = gelen_su_m3 / 1e6
+  ) |>
+  filter(!is.na(yil), !is.na(gelen_su_m3)) |>
+  arrange(yil, ay_no)
+
+baraj_long |>
+  head(12) |>
+  kable(digits = 2, caption = "Barajlara gelen aylık su miktarı verisinin ilk satırları") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+```
+
+## 🌧️ Ankara Yağış Verisi
+
+```         
+yagis_raw <- oku_veri(
+  c(
+    "yagis.xlsx",
+    "Ankara Yağış Verileri (2023-2026).xlsx",
+    "Ankara Yağış Verileri (2023-2026)(1).xlsx",
+    "Ankara Yagis Verileri (2023-2026).xlsx"
+  )
+)
+
+names(yagis_raw) <- names(yagis_raw) |>
+  str_squish()
+
+tarih_col <- names(yagis_raw)[str_detect(str_to_lower(names(yagis_raw)), "date|time|tarih")][1]
+prcp_col <- names(yagis_raw)[str_detect(str_to_lower(names(yagis_raw)), "^prcp|yağış|yagis")][1]
+temp_col <- names(yagis_raw)[str_detect(str_to_lower(names(yagis_raw)), "^tavg|temp|sicak|sıcak")][1]
+
+if (is.na(tarih_col)) {
+  stop("Yağış dosyasında tarih/time sütunu bulunamadı.")
+}
+
+if (is.na(prcp_col)) {
+  stop("Yağış dosyasında prcp/yağış sütunu bulunamadı.")
+}
+
+yagis_gunluk <- yagis_raw |>
+  mutate(
+    tarih_saat = .data[[tarih_col]],
+    yagis_mm = hacim_sayi(.data[[prcp_col]])
+  )
+
+if (!is.na(temp_col)) {
+  yagis_gunluk <- yagis_gunluk |>
+    mutate(sicaklik = hacim_sayi(.data[[temp_col]]))
+} else {
+  yagis_gunluk <- yagis_gunluk |>
+    mutate(sicaklik = NA_real_)
+}
+
+yagis_gunluk <- yagis_gunluk |>
+  transmute(
+    tarih_saat,
+    yagis_mm,
+    sicaklik,
+    tarih = as.Date(as.POSIXct(tarih_saat, tz = "Europe/Istanbul"))
+  ) |>
+  group_by(tarih) |>
+  summarise(
+    gunluk_yagis_mm = sum(yagis_mm, na.rm = TRUE),
+    ortalama_sicaklik = mean(sicaklik, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(
+    yil = year(tarih),
+    ay_no = month(tarih),
+    ay = factor(ay_sirasi[ay_no], levels = ay_sirasi, ordered = TRUE)
+  )
+
+yagis_aylik <- yagis_gunluk |>
+  group_by(yil, ay_no, ay) |>
+  summarise(
+    aylik_yagis_mm = sum(gunluk_yagis_mm, na.rm = TRUE),
+    ortalama_sicaklik = mean(ortalama_sicaklik, na.rm = TRUE),
+    gun_sayisi = n(),
+    .groups = "drop"
+  ) |>
+  mutate(
+    tarih = as.Date(paste(yil, ay_no, "01", sep = "-"))
+  )
+
+yagis_aylik |>
+  head(12) |>
+  kable(digits = 2, caption = "Aylık toplam yağış verisinin ilk satırları") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+```
+
+## 📈 Dağıtılan, Çekilen ve Kişi Başı Çekilen Su Verisi
+
+```         
+raw_kullanim <- oku_veri_opsiyonel(
+  c(
+    "dagitilan_cekilen.xls",
+    "dagitilan_cekilen.xlsx",
+    "DAGITILAN CEKILEN VE KIS BASI CEKILEN.xls",
+    "DAGITILAN CEKILEN VE KIS BASI CEKILEN.xlsx",
+    "DAGITILAN CEKILEN VE KISI BASI CEKILEN.xls"
+  ),
+  col_names = FALSE
+)
+
+if (nrow(raw_kullanim) > 0) {
+  # Kolon isimlendirmelerini sabitleyerek kütüphane uyumsuzluğunu önlüyoruz
+  names(raw_kullanim)[1:min(5, ncol(raw_kullanim))] <- paste0("col", 1:min(5, ncol(raw_kullanim)))
+  
+  su_kullanim <- raw_kullanim |>
+    slice(6:n()) |>
+    transmute(
+      yil = as.numeric(col2),
+      dagitilan_su_m3 = hacim_sayi(col3),
+      cekilen_su_bin_m3 = hacim_sayi(col4),
+      kisi_basi_litre_gun = hacim_sayi(col5)
+    ) |>
+    filter(!is.na(yil)) |>
+    mutate(
+      dagitilan_su_milyon_m3 = dagitilan_su_m3 / 1e6,
+      cekilen_su_milyon_m3 = cekilen_su_bin_m3 / 1000
+    )
+} else {
+  su_kullanim <- tibble()
+}
+
+if (nrow(su_kullanim) > 0) {
+  su_kullanim |>
+    head(10) |>
+    kable(digits = 2, caption = "Dağıtılan, çekilen ve kişi başı çekilen su verisi") |>
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+} else {
+  tibble(
+    bilgi = "Dağıtılan/çekilen su dosyası bulunamadı. Bu bölüm atlanacaktır."
+  ) |>
+    kable(caption = "Dosya durumu") |>
+    kable_styling(full_width = FALSE)
+}
+```
+
+## 🗺️ Suyun Kaynaklara Göre Dağılımı
+
+```         
+raw_kaynak <- oku_veri_opsiyonel(
+  c(
+    "sular_nereden_geliyor.xls",
+    "sular_nereden_geliyor.xlsx",
+    "sular nereden geliyor.xls",
+    "sular nereden geliyor.xlsx"
+  ),
+  col_names = FALSE
+)
+
+if (nrow(raw_kaynak) > 0) {
+  # Kolon isimlendirmelerini sabitleyerek kütüphane uyumsuzluğunu önlüyoruz
+  names(raw_kaynak)[1:min(7, ncol(raw_kaynak))] <- paste0("col", 1:min(7, ncol(raw_kaynak)))
+  
+  su_kaynak <- raw_kaynak |>
+    slice(6:n()) |>
+    transmute(
+      yil = as.numeric(col2),
+      akarsu = hacim_sayi(col3),
+      baraj = hacim_sayi(col4),
+      golet = hacim_sayi(col5),
+      kaynak = hacim_sayi(col6),
+      kuyu = hacim_sayi(col7)
+    ) |>
+    filter(!is.na(yil)) |>
+    mutate(across(akarsu:kuyu, ~ replace_na(.x, 0)))
+  
+  su_kaynak_long <- su_kaynak |>
+    pivot_longer(
+      cols = akarsu:kuyu,
+      names_to = "kaynak_turu",
+      values_to = "su_bin_m3"
+    ) |>
+    mutate(
+      kaynak_turu = str_to_title(kaynak_turu, locale = "tr"),
+      su_milyon_m3 = su_bin_m3 / 1000
+    )
+} else {
+  su_kaynak <- tibble()
+  su_kaynak_long <- tibble()
+}
+
+if (nrow(su_kaynak_long) > 0) {
+  su_kaynak_long |>
+    head(10) |>
+    kable(digits = 2, caption = "Suyun kaynaklara göre dağılımı") |>
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+} else {
+  tibble(
+    bilgi = "Sular nereden geliyor dosyası bulunamadı. Kaynak kompozisyonu bölümü atlanacaktır."
+  ) |>
+    kable(caption = "Dosya durumu") |>
+    kable_styling(full_width = FALSE)
+}
+```
+
+## 📡 ASKİ Güncel Baraj Doluluk Verisi
+
+```         
+aski_url <- "[https://www.aski.gov.tr/tr/baraj.aspx](https://www.aski.gov.tr/tr/baraj.aspx)"
+
+aski_veri_cek <- function(url) {
+  sayfa <- read_html(url, encoding = "UTF-8")
+  tablolar <- html_table(sayfa, fill = TRUE)
+  
+  uygun_index <- which(
+    map_lgl(
+      tablolar,
+      ~ any(str_detect(names(.x), "Baraj|Hacim|Yüzde|Miktar")) && ncol(.x) >= 4
+    )
+  )
+  
+  if (length(uygun_index) == 0) {
+    uygun_index <- which(
+      map_lgl(
+        tablolar,
+        ~ any(str_detect(as.character(.x[1, ]), "Baraj|Hacim|Yüzde|Miktar")) && ncol(.x) >= 4
+      )
+    )
+  }
+  
+  if (length(uygun_index) == 0) {
+    stop("ASKİ sayfasında baraj tablosu bulunamadı.")
+  }
+  
+  tablo <- tablolar[[uygun_index[1]]]
+  
+  if (!any(str_detect(names(tablo), "Baraj|Hacim|Yüzde|Miktar"))) {
+    names(tablo) <- as.character(tablo[1, ])
+    tablo <- tablo[-1, ]
+  }
+  
+  names(tablo) <- names(tablo) |>
+    str_squish()
+  
+  baraj_col <- names(tablo)[str_detect(names(tablo), "Baraj")][1]
+  hacim_col <- names(tablo)[str_detect(names(tablo), "Toplam|Hacim")][1]
+  su_col <- names(tablo)[str_detect(names(tablo), "SU Miktarı|Su Miktarı|Miktarı")][1]
+  yuzde_col <- names(tablo)[str_detect(names(tablo), "Yüzde|Yuzde|%")][1]
+  
+  if (any(is.na(c(baraj_col, hacim_col, su_col, yuzde_col)))) {
+    stop("ASKİ baraj tablosunda gerekli sütunlar bulunamadı.")
+  }
+  
+  tablo |>
+    transmute(
+      baraj_adi = as.character(.data[[baraj_col]]),
+      toplam_hacim_m3 = hacim_sayi(.data[[hacim_col]]),
+      mevcut_su_m3 = hacim_sayi(.data[[su_col]]),
+      doluluk_yuzde = yuzde_sayi(.data[[yuzde_col]])
+    ) |>
+    filter(
+      !is.na(baraj_adi),
+      !is.na(toplam_hacim_m3),
+      !is.na(mevcut_su_m3)
+    )
+}
+
+baraj_detay <- tryCatch(
+  {
+    aski_veri_cek(aski_url) |>
+      mutate(veri_kaynagi = "ASKİ web sayfası")
+  },
+  error = function(e) {
+    tibble(
+      baraj_adi = c(
+        "Akyar Barajı",
+        "Çamlıdere Barajı",
+        "Çubuk 2 Barajı",
+        "Eğrekkaya Barajı",
+        "Kargalı Barajı",
+        "Kavşakkaya Barajı",
+        "Kesikköprü Barajı",
+        "Kurtboğazı Barajı",
+        "Peçenek Barajı",
+        "Türkşerefli Barajı"
+      ),
+      toplam_hacim_m3 = c(
+        52445000,
+        1108276000,
+        22961000,
+        93452000,
+        542000,
+        85228000,
+        95000000,
+        91762000,
+        59525000,
+        5668500
+      ),
+      mevcut_su_m3 = c(
+        42436000,
+        442928000,
+        16339000,
+        74979000,
+        542000,
+        58130000,
+        95000000,
+        29670000,
+        16360000,
+        295000
+      ),
+      doluluk_yuzde = c(
+        80.92,
+        39.97,
+        71.16,
+        80.23,
+        100.00,
+        68.21,
+        100.00,
+        32.33,
+        27.48,
+        5.20
+      ),
+      veri_kaynagi = "Manuel yedek tablo"
+    )
+  }
+)
+
+baraj_guncel_ozet <- baraj_detay |>
+  summarise(
+    toplam_kapasite_m3 = sum(toplam_hacim_m3, na.rm = TRUE),
+    guncel_mevcut_su_m3 = sum(mevcut_su_m3, na.rm = TRUE),
+    guncel_doluluk_yuzde = guncel_mevcut_su_m3 / toplam_kapasite_m3 * 100,
+    veri_kaynagi = first(veri_kaynagi)
+  )
+
+baraj_detay |>
+  kable(
+    digits = 2,
+    caption = "Baraj bazında güncel doluluk bilgileri"
+  ) |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+```
+
+```         
+baraj_guncel_ozet |>
+  kable(
+    digits = 2,
+    caption = "Güncel toplam baraj kapasitesi ve mevcut su hacmi"
+  ) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+
+toplam_kapasite_m3 <- baraj_guncel_ozet$toplam_kapasite_m3[1]
+guncel_mevcut_su_m3 <- baraj_guncel_ozet$guncel_mevcut_su_m3[1]
+guncel_doluluk_yuzde <- baraj_guncel_ozet$guncel_doluluk_yuzde[1]
+```
+
+## 🧪 Arıtılan İçme ve Kullanma Suyu Miktarı
+
+2023 ve 2024 değerleri gerçekleşme, 2025 ve 2026 değerleri hedef/tahmin niteliğinde kullanılmıştır.
+
+```         
+aritilan_su_yillik <- tibble(
+  yil = c(2023, 2024, 2025, 2026),
+  aritilan_su_m3 = c(
+    528590936,
+    579391858,
+    544620231,
+    560327370
+  ),
+  veri_turu = c(
+    "Gerçekleşme",
+    "Gerçekleşme",
+    "Hedef/Tahmin",
+    "Hedef/Tahmin"
+  )
+) |>
+  mutate(
+    aritilan_su_milyon_m3 = aritilan_su_m3 / 1e6,
+    gunluk_ortalama_m3 = aritilan_su_m3 / if_else(leap_year(yil), 366, 365)
+  )
+
+aritilan_su_yillik |>
+  kable(
+    digits = 2,
+    caption = "Arıtılan içme ve kullanma suyu miktarı"
+  ) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+# 🔍 Analiz
+
+## 📈 Keşifsel Veri Analizi
+
+### 🗓️ Aylara Göre Barajlara Gelen Su
+
+```         
+ggplot(baraj_long, aes(x = ay, y = gelen_su_milyon_m3)) +
+  geom_boxplot(outlier.alpha = 0.6, fill = "#3182bd", color = "#2b2b2b") +
+  labs(
+    title = "Aylara Göre Barajlara Gelen Su Miktarının Dağılımı",
+    subtitle = "Her kutu, ilgili ayın yıllar içindeki dağılımını göstermektedir.",
+    x = "Ay",
+    y = "Gelen Su Miktarı (Milyon m³)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Barajlara gelen su miktarı aylar arasında güçlü bir mevsimsellik göstermektedir. İlkbahar aylarında yağış ve kar erimesi etkisiyle su girişi yükselirken, yaz sonu ve sonbahar dönemlerinde su girişleri düşme eğilimindedir.
+
+```         
+baraj_long |>
+  group_by(ay, ay_no) |>
+  summarise(
+    ortalama_gelen_su_milyon_m3 = mean(gelen_su_milyon_m3, na.rm = TRUE),
+    medyan_gelen_su_milyon_m3 = median(gelen_su_milyon_m3, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = ay, y = ortalama_gelen_su_milyon_m3)) +
+  geom_col(fill = "#2c7fb8") +
+  labs(
+    title = "Aylara Göre Ortalama Baraj Su Girişi",
+    x = "Ay",
+    y = "Ortalama Gelen Su (Milyon m³)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### 📅 Yıllara Göre Toplam Gelen Su
+
+```         
+baraj_yillik <- baraj_long |>
+  filter(yil < 2026) |>
+  group_by(yil) |>
+  summarise(
+    toplam_gelen_su_m3 = sum(gelen_su_m3, na.rm = TRUE),
+    toplam_gelen_su_milyon_m3 = toplam_gelen_su_m3 / 1e6,
+    .groups = "drop"
+  )
+
+ggplot(baraj_yillik, aes(x = yil, y = toplam_gelen_su_milyon_m3)) +
+  geom_line(color = "#1c9099", linewidth = 1) +
+  geom_point(color = "#016c59", size = 2) +
+  scale_x_continuous(
+    breaks = seq(min(baraj_yillik$yil), max(baraj_yillik$yil), by = 2)
+  ) +
+  labs(
+    title = "Yıllara Göre Barajlara Gelen Toplam Su Miktarı",
+    subtitle = "2026 yılı tamamlanmadığı için yıllık trend grafiğine dahil edilmemiştir.",
+    x = "Yıl",
+    y = "Toplam Gelen Su (Milyon m³)"
+  ) +
+  theme_minimal()
+```
+
+```         
+baraj_yillik |>
+  arrange(toplam_gelen_su_milyon_m3) |>
+  slice_head(n = 5) |>
+  kable(digits = 2, caption = "En düşük toplam su girişine sahip 5 yıl") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+
+baraj_yillik |>
+  arrange(desc(toplam_gelen_su_milyon_m3)) |>
+  slice_head(n = 5) |>
+  kable(digits = 2, caption = "En yüksek toplam su girişine sahip 5 yıl") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+```         
+ggplot(baraj_long, aes(x = ay, y = factor(yil), fill = gelen_su_milyon_m3)) +
+  geom_tile(color = "white") +
+  scale_fill_viridis_c(option = "mako", direction = -1) +
+  labs(
+    title = "Ay ve Yıllara Göre Barajlara Gelen Su Miktarı Isı Haritası",
+    x = "Ay",
+    y = "Yıl",
+    fill = "Milyon m³"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## 🌧️ Yağış ve Barajlara Gelen Su İlişkisi
+
+```         
+yagis_baraj <- baraj_long |>
+  inner_join(
+    yagis_aylik,
+    by = c("yil", "ay_no", "ay", "tarih")
+  ) |>
+  filter(!is.na(gelen_su_m3), !is.na(aylik_yagis_mm))
+
+yagis_baraj |>
+  select(yil, ay, aylik_yagis_mm, gelen_su_milyon_m3) |>
+  head(12) |>
+  kable(digits = 2, caption = "Yağış ve barajlara gelen su birleşik veri seti") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+```
+
+```         
+ggplot(yagis_baraj, aes(x = aylik_yagis_mm, y = gelen_su_milyon_m3)) +
+  geom_point(size = 2, alpha = 0.8, color = "#2c7fb8") +
+  geom_smooth(method = "lm", se = FALSE, color = "#de2d26", linetype = "dashed") +
+  labs(
+    title = "Aylık Yağış ve Barajlara Gelen Su İlişkisi",
+    x = "Aylık Yağış (mm)",
+    y = "Barajlara Gelen Su (Milyon m³)"
+  ) +
+  theme_minimal()
+```
+
+```         
+korelasyon_yagis_baraj <- cor(
+  yagis_baraj$aylik_yagis_mm,
+  yagis_baraj$gelen_su_milyon_m3,
+  use = "complete.obs"
+)
+
+tibble(
+  Gösterge = "Aylık yağış ile barajlara gelen su korelasyonu",
+  Korelasyon = korelasyon_yagis_baraj
+) |>
+  kable(digits = 3) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+Yağış ve barajlara gelen su arasında pozitif bir ilişki beklenmektedir. Ancak bu ilişkinin birebir olması beklenmez. Çünkü yağışın baraja ulaşması havza özelliklerine, kar erimesine, buharlaşmaya, toprak nemine ve yüzey akışına bağlıdır.
+
+## 🚰 Su Kullanımı Analizi
+
+```         
+if (nrow(su_kullanim) > 0) {
+  ggplot(su_kullanim, aes(x = yil, y = dagitilan_su_milyon_m3)) +
+    geom_line(color = "#756bb1", linewidth = 1.1) +
+    geom_point(color = "#54278f", size = 3) +
+    labs(
+      title = "Ankara'da Dağıtılan Su Miktarı",
+      x = "Yıl",
+      y = "Dağıtılan Su (Milyon m³)"
+    ) +
+      theme_minimal()
+}
+```
+
+```         
+if (nrow(su_kullanim) > 0) {
+  ggplot(su_kullanim, aes(x = yil, y = cekilen_su_milyon_m3)) +
+    geom_line(color = "#2ca25f", linewidth = 1.1) +
+    geom_point(color = "#006d2c", size = 3) +
+    labs(
+      title = "İçme ve Kullanma Suyu İçin Çekilen Toplam Su",
+      x = "Yıl",
+      y = "Çekilen Su (Milyon m³)"
+    ) +
+    theme_minimal()
+}
+```
+
+```         
+if (nrow(su_kullanim) > 0) {
+  ggplot(su_kullanim, aes(x = yil, y = kisi_basi_litre_gun)) +
+    geom_line(color = "#feb24c", linewidth = 1.1) +
+    geom_point(color = "#f03b20", size = 3) +
+    geom_hline(
+      yintercept = mean(su_kullanim$kisi_basi_litre_gun, na.rm = TRUE),
+      linetype = "dashed", color = "gray50"
+    ) +
+    labs(
+      title = "Kişi Başı Günlük Çekilen Su Miktarı",
+      subtitle = "Kesikli çizgi dönem ortalamasını göstermektedir.",
+      x = "Yıl",
+      y = "Litre / Kişi-Gün"
+    ) +
+    theme_minimal()
+}
+```
+
+Dağıtılan ve çekilen su miktarının yıllar içinde artması, Ankara'nın su talebinin uzun vadede yükseldiğini göstermektedir. Kişi başı günlük su değerinin dalgalı olması ise toplam talepteki artışın yalnızca bireysel tüketimden değil, nüfus artışı, kentleşme ve altyapı dinamiklerinden de etkilendiğini düşündürmektedir.
+
+## 🌊 Su Kaynakları Analizi
+
+```         
+if (nrow(su_kaynak_long) > 0) {
+  ggplot(su_kaynak_long, aes(x = factor(yil), y = su_milyon_m3, fill = kaynak_turu)) +
+    geom_col() +
+    scale_fill_brewer(palette = "Set2") +
+    labs(
+      title = "Ankara İçme ve Kullanma Suyunun Kaynaklara Göre Dağılımı",
+      x = "Yıl",
+      y = "Çekilen Su (Milyon m³)",
+      fill = "Kaynak Türü"
+    ) +
+    theme_minimal()
+}
+```
+
+```         
+if (nrow(su_kaynak_long) > 0) {
+  su_kaynak_pay <- su_kaynak_long |>
+    group_by(yil) |>
+    mutate(
+      pay = su_bin_m3 / sum(su_bin_m3, na.rm = TRUE)
+    ) |>
+    ungroup()
+  
+  ggplot(su_kaynak_pay, aes(x = factor(yil), y = pay, fill = kaynak_turu)) +
+    geom_col(position = "fill") +
+    scale_y_continuous(labels = percent) +
+    scale_fill_brewer(palette = "Set2") +
+    labs(
+      title = "Su Kaynaklarının Yüzdesel Payı",
+      x = "Yıl",
+      y = "Pay",
+      fill = "Kaynak Türü"
+    ) +
+    theme_minimal()
+}
+```
+
+Kaynak kompozisyonu Ankara'nın su arzında barajların stratejik önemini göstermektedir. Baraj kaynaklı suyun baskın hale gelmesi, yağış rejimi ve baraj doluluklarının su yönetimi açısından daha kritik hale gelmesine neden olmaktadır.
+
+# 🤖 Model Uydurma
+
+## 📉 Yağış ve Gelen Su Modeli
+
+```         
+model_yagis <- lm(gelen_su_milyon_m3 ~ aylik_yagis_mm, data = yagis_baraj)
+
+tidy(model_yagis) |>
+  kable(digits = 4, caption = "Yağış ve barajlara gelen su regresyon modeli katsayıları") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+
+glance(model_yagis) |>
+  select(r.squared, adj.r.squared, sigma, statistic, p.value) |>
+  kable(digits = 4, caption = "Yağış modeli uyum ölçütleri") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+Bu model yağış miktarı ile barajlara gelen su miktarı arasındaki doğrusal ilişkiyi incelemek için kurulmuştur. Model nedensellik kanıtı olarak değil, keşifsel ilişki analizi olarak değerlendirilmelidir.
+
+## 📈 Dağıtılan Su Trend Modeli
+
+```         
+if (nrow(su_kullanim) > 0) {
+  model_dagitilan <- lm(dagitilan_su_milyon_m3 ~ yil, data = su_kullanim)
+  
+  tidy(model_dagitilan) |>
+    kable(digits = 4, caption = "Dağıtılan su trend modeli katsayıları") |>
+    kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+  
+  glance(model_dagitilan) |>
+    select(r.squared, adj.r.squared, sigma, statistic, p.value) |>
+    kable(digits = 4, caption = "Dağıtılan su trend modeli uyum ölçütleri") |>
+    kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+}
+```
+
+```         
+if (nrow(su_kullanim) > 0) {
+  ggplot(su_kullanim, aes(x = yil, y = dagitilan_su_milyon_m3)) +
+    geom_point(size = 3, color = "#54278f") +
+    geom_smooth(method = "lm", se = TRUE, color = "#756bb1") +
+    labs(
+      title = "Dağıtılan Su Miktarı İçin Doğrusal Trend",
+      x = "Yıl",
+      y = "Dağıtılan Su (Milyon m³)"
+    ) +
+    theme_minimal()
+}
+```
+
+# 🔮 2026 Kalan Aylar İçin Baraj Doluluk Oranı Tahmini
+
+Bu bölümde güncel baraj mevcut su hacmi başlangıç noktası olarak alınmıştır. 2026 yılının kalan ayları için barajlara gelecek su miktarı, 2001-2025 dönemindeki aynı ayların ortalaması ile tahmin edilmiştir. Tüketim tarafında ise 2026 yılı arıtılan su hedefi ay gün sayısına göre aylara dağıtılmıştır.
+
+Bu analizde 2026 yılı için Ocak-Mayıs döneminin gerçekleştiği kabul edilmiş, Haziran-Aralık dönemi için tahmin yapılmıştır.
+
+Tahmin denklemi:
+
+\$\$Net\\ Su\\ Dengesi_t = Tahmini\\ Gelen\\ Su_t - Tahmini\\ Tüketim_t\$\$\$\$Tahmini\\ Mevcut\\ Su\_{t+1} = Güncel\\ Mevcut\\ Su_t + \\sum Net\\ Su\\ Dengesi\$\$\$\$Tahmini\\ Doluluk\\ Oranı = \\frac{Tahmini\\ Mevcut\\ Su}{Toplam\\ Baraj\\ Kapasitesi} \\times 100\$\$
+
+```         
+tahmin_yili <- 2026
+son_gercek_ay <- 5L
+
+tahmin_edilecek_aylar <- ay_tablosu |>
+  select(ay_no, ay) |>
+  filter(ay_no > son_gercek_ay)
+
+aylik_mevsimsel_ortalama <- baraj_long |>
+  filter(yil >= 2001, yil <= tahmin_yili - 1) |>
+  group_by(ay_no) |>
+  summarise(
+    tahmini_gelen_su_m3 = mean(gelen_su_m3, na.rm = TRUE),
+    tahmini_gelen_su_milyon_m3 = tahmini_gelen_su_m3 / 1e6,
+    .groups = "drop"
+  )
+
+aritilan_2026_m3 <- aritilan_su_yillik |>
+  filter(yil == tahmin_yili) |>
+  pull(aritilan_su_m3)
+
+if (length(aritilan_2026_m3) == 0) {
+  stop("2026 arıtılan su hedef değeri bulunamadı.")
+}
+
+tuketim_aylik_2026 <- tibble(
+  ay_no = 1:12,
+  gun_sayisi = days_in_month(as.Date(paste(tahmin_yili, 1:12, "01", sep = "-"))) |> as.integer()
+) |>
+  mutate(
+    yil = tahmin_yili,
+    tahmini_tuketim_m3 = aritilan_2026_m3 * gun_sayisi / sum(gun_sayisi),
+    tahmini_tuketim_milyon_m3 = tahmini_tuketim_m3 / 1e6
+  )
+
+tahmin_aylari <- tahmin_edilecek_aylar |>
+  mutate(yil = tahmin_yili) |>
+  left_join(
+    aylik_mevsimsel_ortalama,
+    by = "ay_no"
+  ) |>
+  left_join(
+    tuketim_aylik_2026 |>
+      select(ay_no, tahmini_tuketim_m3, tahmini_tuketim_milyon_m3),
+    by = "ay_no"
+  ) |>
+  arrange(ay_no) |>
+  mutate(
+    net_su_dengesi_m3 = tahmini_gelen_su_m3 - tahmini_tuketim_m3,
+    net_su_dengesi_milyon_m3 = net_su_dengesi_m3 / 1e6,
+    kumulatif_net_su_dengesi_m3 = cumsum(replace_na(net_su_dengesi_m3, 0)),
+    kumulatif_net_su_dengesi_milyon_m3 = kumulatif_net_su_dengesi_m3 / 1e6,
+    tahmini_mevcut_su_m3 = guncel_mevcut_su_m3 + kumulatif_net_su_dengesi_m3,
+    tahmini_mevcut_su_m3 = pmax(tahmini_mevcut_su_m3, 0),
+    tahmini_doluluk_yuzde = tahmini_mevcut_su_m3 / toplam_kapasite_m3 * 100
+  )
+
+tahmin_aylari |>
+  select(
+    ay,
+    tahmini_gelen_su_milyon_m3,
+    tahmini_tuketim_milyon_m3,
+    net_su_dengesi_milyon_m3,
+    kumulatif_net_su_dengesi_milyon_m3,
+    tahmini_doluluk_yuzde
+  ) |>
+  kable(
+    digits = 2,
+    caption = "2026 Haziran-Aralık dönemi için tahmini su dengesi ve doluluk oranı"
+  ) |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+```
+
+```         
+ggplot(tahmin_aylari, aes(x = ay, y = net_su_dengesi_milyon_m3)) +
+  geom_col(fill = "#d95f02") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  labs(
+    title = "2026 Haziran-Aralık İçin Tahmini Aylık Net Su Dengesi",
+    subtitle = "Net denge = tahmini gelen su - tahmini tüketim",
+    x = "Ay",
+    y = "Net Su Dengesi (Milyon m³)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```         
+ggplot(tahmin_aylari, aes(x = ay, y = tahmini_doluluk_yuzde, group = 1)) +
+  geom_line(color = "#1f78b4", linewidth = 1.1) +
+  geom_point(color = "#08519c", size = 2.5) +
+  geom_hline(
+    yintercept = guncel_doluluk_yuzde,
+    linetype = "dashed", color = "#de2d26"
+  ) +
+  labs(
+    title = "2026 Haziran-Aralık İçin Tahmini Baraj Doluluk Oranı",
+    subtitle = "Kırmızı kesikli çizgi güncel başlangıç doluluk oranını göstermektedir.",
+    x = "Ay",
+    y = "Tahmini Doluluk Oranı (%)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```         
+tibble(
+  Gösterge = c(
+    "Güncel mevcut su hacmi",
+    "Güncel doluluk oranı",
+    "Tahmin başlangıç ayı",
+    "Tahmin son ayı",
+    "Tahmin sonunda mevcut su hacmi",
+    "Tahmin sonunda doluluk oranı"
+  ),
+  Değer = c(
+    paste0(round(guncel_mevcut_su_m3 / 1e6, 2), " milyon m³"),
+    paste0(round(guncel_doluluk_yuzde, 2), " %"),
+    "Haziran 2026",
+    "Aralık 2026",
+    paste0(round(last(tahmin_aylari$tahmini_mevcut_su_m3) / 1e6, 2), " milyon m³"),
+    paste0(round(last(tahmin_aylari$tahmini_doluluk_yuzde), 2), " %")
+  )
+) |>
+  kable(caption = "Güncel durum ve tahmin sonu özeti") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+Bu tahmin, 2026 yılı için Mayıs ayına kadar gerçekleşmiş veri olduğu varsayımıyla Haziran-Aralık dönemini kapsamaktadır. Modelde beklenen aylık su girişi geçmiş yılların aynı ay ortalamalarına, tüketim tarafı ise 2026 arıtılan su hedefinin ay gün sayılarına göre dağıtılmasına dayanmaktadır.
+
+# 📝 Sonuçlar ve Ana Çıkarımlar
+
+Bu çalışmada Ankara'nın su yönetimi; barajlara gelen su miktarı, yağış verisi, su kullanım göstergeleri ve güncel baraj doluluk durumu ile birlikte ele alınmıştır. Analizler sonucunda aşağıdaki bulgular öne çıkmaktadır:
+
+1.  **Mevsimsel Dalgalanmalar:** Ankara barajlarına gelen su miktarı belirgin bir mevsimsellik göstermektedir. İlkbahardaki akışlar yüksek iken yaz-sonbahar dönemi düşüktür.
+
+2.  **Arz-Talep Dengesi:** Dağıtılan ve çekilen su miktarları uzun vadede istikrarlı bir şekilde artış eğilimi göstermektedir.
+
+3.  **Baraj Bağımlılığı:** Ankara'nın su arzında barajlar en stratejik ve domine edici kaynak konumundadır. Bu durum kenti iklim koşullarına hassas hale getirmektedir.
+
+4.  **Tahmin Senaryosu:** Mevcut su stok seviyesi ve mevsimsel ortalamalar kullanılarak yapılan kısa dönemli tahminler, tüketimin gelen suyu aşması nedeniyle yaz aylarında doluluk oranlarında düşüş eğilimini doğrulamaktadır.
+
+Ankara'da baraj doluluk oranı yalnızca yağışla değil, aynı zamanda tüketim yönetimi, kaynak çeşitliliği ve mevsimsel planlama ile birlikte bütünsel olarak ele alınmalıdır.
+
+# ⚠️ Sınırlılıklar
+
+Bu çalışmanın bazı sınırlılıkları bulunmaktadır:
+
+1.  2026 yılı barajlara gelen su verileri henüz tamamlanmamıştır.
+
+2.  2025 ve 2026 arıtılan su değerleri gerçekleşme değil, idari hedef/tahmin niteliğindedir.
+
+3.  ASKİ güncel baraj doluluk verisi, modelde statik bir başlangıç stoku olarak kullanılmıştır.
+
+4.  Tahmin modeli basit mevsimsel tarihsel ortalamalara dayanmaktadır.
+
+5.  Buharlaşma, sızıntı, baraj işletme kararları, havza alanı, kar örtüsü ve yüzey akışı dinamikleri bu modele dahil edilmemiştir.
+
+6.  Yağış verisi mm cinsindedir; doğrudan hacme çevrilmemiştir.
+
+7.  Tahmin sonuçları kesin hidrolojik sonuçlar değil, keşifsel karar destek senaryolarıdır.
+
+# 🤖 Yapay Zekâ Kullanımı
+
+Bu proje kapsamında konu kurgusu, veri birleştirme mantığı, R/Quarto kod iskeleti, grafiklerin düzenlenmesi, modelleme yaklaşımı ve yorum taslaklarının geliştirilmesi aşamalarında ChatGPT ve Gemini modellerinden interaktif destek alınmıştır. Yapay zekadan gelen ham kodlar ve veri işleme önerileri, akademik muhakeme süzgecinden geçirilerek ve Türkçe yerel ayarlara uygun hale getirilerek düzenlenmiştir.
+
+Kullanılan istem örnekleri:
+
+> *"Ankara'da su kullanım verilerini inceleyerek önümüzdeki aylarda baraj doluluk oranını tahmin eden bir model geliştirmek istiyorum."*
+
+> *"Farklı veri kütüphaneleri (readxl ve readr) isimsiz kolonları farklı isimlendiriyor, bunu R üzerinde standardize edecek güvenli bir veri okuma yardımcı fonksiyonu yazar mısın?"*
