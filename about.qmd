@@ -48,3 +48,10 @@ sidebar: false
 -   Traveling & cultural exploration
 
 -   Cooking & food culture
+
+# Resume
+
+::: {style="text-align:center; margin-top:20px;"}
+<a href="assets/Ozgecmis-Zeynep Sena YILMAZ" download
+style="background-color:#1d1d1f; color:white; padding:12px 24px; text-decoration:none; border-radius:10px;"> Ozgecmisi indir </a>
+:::

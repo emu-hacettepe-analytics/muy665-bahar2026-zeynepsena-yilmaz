@@ -1,5 +1,5 @@
 ---
-title: "Işıltılı Analitik Sayfasına Hoşgeldiniz"
+title: "Sena'nın Işıltılı Analitik Sayfasına Hoşgeldiniz"
 sidebar: false 
 ---
 

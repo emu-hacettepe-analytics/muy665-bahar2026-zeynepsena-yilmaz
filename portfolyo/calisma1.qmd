@@ -14,7 +14,7 @@ Hazırladığım web sitesine [buradan](https://emu-hacettepe-analytics.github.i
 
 ## 3) Video Analizi
 
-"Veri Bilimi ve Endüstri Mühendisliği Üzerine Sohbetler" videosundan edindiğim temel çıkarım: *(Buraya kendi cümlelerinle 1-2 cümle eklemeyi unutma!)*
+"Veri Bilimi ve Endüstri Mühendisliği Üzerine Sohbetler" videosundan edindiğim temel çıkarım: Veri biliminin sadece büyük veri veya karmaşık modeller inşa etmekten ibaret olmadığı, aksine doğru problemi tanımlamanın ve alan uzmanlığının (domain knowledge) başarıdaki en büyük etken olduğudur. Endüstri mühendisliği yaklaşımlarının otonom araçlar ve envanter yönetimi gibi geleceğin karmaşık sistemlerini optimize etmede veri bilimiyle nasıl güçlü bir sinerji oluşturduğunu görmekteyiz.
 
 ## 4) MÜY665 Ödev-1: Veri Analizi ve Temizleme
 
