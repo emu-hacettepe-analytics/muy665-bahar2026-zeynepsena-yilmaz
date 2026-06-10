@@ -1138,6 +1138,7 @@ Bu çalışmanın bazı sınırlılıkları bulunmaktadır:
 
 Bu proje kapsamında konu kurgusu, veri birleştirme mantığı, R/Quarto kod iskeleti, grafik yorumlarının düzenlenmesi, senaryo analizi mantığının geliştirilmesi ve rapor metninin sadeleştirilmesi aşamalarında ChatGPT'den yardımcı araç olarak yararlanılmıştır. Nihai analiz, grafikler ve yorumlar grup üyeleri tarafından kontrol edilerek düzenlenmiştir.
 
+
 Kullanılan istem örnekleri:
 
 > "Ankara'da su kullanım verilerini, yağış verilerini ve barajlara gelen su miktarını birlikte analiz eden bir Quarto proje yapısı hazırla."
