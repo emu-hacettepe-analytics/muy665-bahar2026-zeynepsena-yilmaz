@@ -20,6 +20,7 @@ execute:
 
 **Projemizle ilgili güncellemelerden haberdar olmak için proje sayfamızı takip edebilirsiniz.**
 
+
 # 🎯 Proje Genel Bakış ve Kapsamı
 
 Ankara'da su yönetimi, nüfus artışı, kentleşme, iklimsel dalgalanmalar ve barajlara bağımlı içme-kullanma suyu sistemi nedeniyle giderek daha kritik hale gelmektedir. Bu projenin amacı, Ankara'daki su kullanım verilerini, barajlara gelen su miktarını, yağış verilerini ve güncel baraj doluluk durumunu birlikte inceleyerek Ankara su sisteminin arz, talep ve mevcut stok yapısını keşifsel veri analizi ile değerlendirmektir. Çalışmanın sonunda, kesin bir tahmin modeli kurmak yerine farklı su girişi varsayımlarına dayalı kurak, normal ve iyimser senaryo analizi yapılmıştır.
